@@ -8,12 +8,14 @@ const Home = () => {
     email: Yup.string()
       .email('Invalid email address')
       .required('Email is required'),
+    over18: Yup.boolean().oneOf([true], 'You must be over 18'),
   });
 
   const formik = useFormik({
     initialValues: {
       name: '',
       email: '',
+      over18: false,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -22,7 +24,8 @@ const Home = () => {
   });
 
   return (
-    <form className='form-container'>
+    <form className='form-container' onSubmit={formik.handleSubmit}>
+      <h1>With Formik & Yup</h1>
       <label htmlFor='name'>Name:</label>
       <input
         className='input'
@@ -49,6 +52,21 @@ const Home = () => {
       />
       {formik.touched.email && formik.errors.email && (
         <div className='error'>{formik.errors.email}</div>
+      )}
+
+      <label>
+        <input
+          className='input'
+          type='checkbox'
+          name='over18'
+          checked={formik.values.over18}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        Are you over 18?
+      </label>
+      {formik.touched.over18 && formik.errors.over18 && (
+        <div className='error'>{formik.errors.over18}</div>
       )}
 
       <button type='submit' className='btn'>
